@@ -1,0 +1,257 @@
+<html lang="en">
+<head class="header-area overlay">
+    <meta charset="utf-8">
+    <title>admin_course_startApplication</title>
+    <link rel="stylesheet" href="/static/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/admin.css">
+    <link rel="stylesheet" href="/static/assets/css/app.css">
+	<link rel="stylesheet" href="/static/assets/css/bootstrap-select.css">
+	<link rel="stylesheet" href="/static/assets/css/bootstrap-table.min.css">
+	<link rel="stylesheet" href="/static/assets/css/font-awesome.min.css">
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+	<link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="/static/assets/js/jquery.min.js"></script>
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+	<script src="/static/assets/js/popper.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+	<script src="/static/assets/js/bootstrap.min.js"></script>
+	<script src="/static/assets/js/bootstrap-table.js"></script>
+	<script src="/static/assets/js/tableExport.js"></script>
+	<script src="/static/assets/js/laydate/laydate.js"></script>
+	<script src="/static/assets/js/bootstrap-select.js"></script>
+	<script src="/static/assets/js/bootstrap-table-export.js"></script>
+	<script src="/static/assets/js/admin.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+		<div class="container">
+			<a href="#" class="navbar-brand">教务管理系统</a>
+
+			<button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#main-nav">
+				<span class="menu-icon-bar"></span>
+				<span class="menu-icon-bar"></span>
+				<span class="menu-icon-bar"></span>
+			</button>
+			<div class="dropdown nav-person">
+				<a href="#" class="nav-item nav-link" data-toggle="dropdown">你好，{{posts.AdminName}}（{{posts.AdminNo}}）</a>
+				<div class="dropdown-menu">
+					<a href="{{ url_for('log.logout')}}" class="dropdown-item">登出</a>
+					<a href="{{ url_for('log.logout')}}" class="dropdown-item" data-toggle = "modal" data-target="#Modal_editPassword">修改密码</a>
+				</div>
+			</div>
+
+			<div id="main-nav" class="collapse navbar-collapse">
+				<ul class="navbar-nav ml-auto">
+					<li><a href="{{ url_for('admin.admin_index')}}" class="nav-item nav-link ">首页</a></li>
+					<li class="dropdown">
+						<a href="#" class="nav-item nav-link " data-toggle="dropdown">人员管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('admin.admin_stuff_addStudent')}}" class="dropdown-item">录入学生</a>
+							<a href="{{url_for('admin.admin_stuff_addTeacher')}}" class="dropdown-item">录入教师</a>
+							<a href="{{url_for('admin.admin_stuff_addAdmin')}}" class="dropdown-item">录入管理员</a>
+						</div>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="nav-item nav-link active" data-toggle="dropdown">课程管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('admin.admin_course_teachApplication')}}" class="dropdown-item">处理任课申请</a>
+							<a href="{{url_for('admin.admin_course_startApplication')}}" class="dropdown-item">处理开课申请</a>
+							<a href="{{url_for('admin.admin_course_viewCourse')}}" class="dropdown-item">查看全校课程</a>
+							<a href="{{url_for('admin.admin_course_viewSpecialityCurriculum')}}" class="dropdown-item">查看专业课表</a>
+						</div>
+					</li>
+                    <li class="dropdown">
+						<a href="#" class="nav-item nav-link" data-toggle="dropdown">考试管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('admin.admin_exam_editExam')}}" class="dropdown-item">设置考试安排</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-12">
+			<div id="toolbar">
+			</div>
+			<table id="table"
+			   	data-height="680"
+			   	data-pagination="true"
+			   	data-url="/data/StartApplication"
+				data-toolbar="#toolbar"
+  				data-search="true"
+				data-search-on-enter-key="true"
+				data-show-export="true"
+				data-export-data-type="all"
+				class="table-fix">
+		  <thead>
+			<tr>
+			  <th data-field="teacherID" data-sortable="true">教师工号</th>
+			  <th data-field="teacherName" data-sortable="true">教师名</th>
+			  <th data-field="courseName" data-sortable="true">课程名</th>
+			  <th data-field="reason">理由</th>
+              <th data-field="operate" data-formatter="operateFormatter" data-events="window.operateEvents">操作</th>
+			</tr>
+		  </thead>
+		</table>
+		</div>
+
+	</div>
+	<div class="modal fade" id="Modal_editPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			   <div class="modal-header">
+				 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			   </div>
+			   <div class="modal-body">
+					 <div class="form-group">
+					   <label for="oldPassword">旧密码</label>
+					   <input type="password" name="oldPassword" id="oldPassword" class="form-control" required="required" autocomplete="new-password">
+					 </div>
+					 <div class="form-group">
+					   <label for="newPassword">新密码</label>
+					   <input type="password" name="newPassword" id="newPassword" class="form-control" required="required" placeholder="至少6位">
+					 </div>
+			   </div>
+			   <div class="modal-footer">
+					<div class="form-group">
+						 <button type="button" class="btn btn-default" data-dismiss="modal"><span class="" aria-hidden="true"></span>关闭</button>
+				 	 	 <button type="submit" id="btn_submit_editPassword" class="btn btn-primary" data-dismiss="modal" onclick="editPassword_submit()"><span class="" aria-hidden="true"></span>提交</button>
+					 </div>
+			   </div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="Modal_agreeStartApplication" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			   <div class="modal-header">
+				 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			   </div>
+			   <div class="modal-body">
+					 <div class="form-group">
+					   <label for="courseDay">周几上课？</label>
+					   <select class="form-control selectpicker" data-live-search="true" name="courseDay" id="courseDay" required="required">
+						   <option value="1">一</option>
+						   <option value="2">二</option>
+                           <option value="3">三</option>
+						   <option value="4">四</option>
+                           <option value="5">五</option>
+						   <option value="6">六</option>
+                           <option value="7">七</option>
+					   </select>
+					 </div>
+					 <div class="form-group">
+					   <label for="courseBeginNo">第几节课上课？</label>
+					   <select class="form-control selectpicker" data-live-search="true" name="courseBeginNo" id="courseBeginNo" required="required">
+						   <option>1</option>
+						   <option>2</option>
+                           <option>3</option>
+						   <option>4</option>
+                           <option>5</option>
+						   <option>6</option>
+                           <option>7</option>
+                           <option>8</option>
+						   <option>9</option>
+                           <option>10</option>
+					   </select>
+					 </div>
+                     <div class="form-group">
+                     <label for="courseNums">一次课占几节？</label>
+					   <select class="form-control selectpicker" data-live-search="true" name="courseNums" id="courseNums" required="required">
+						   <option>1</option>
+						   <option>2</option>
+                           <option>3</option>
+						   <option>4</option>
+					   </select>
+					 </div>
+                     <div class="form-group">
+                         <label for="classroomNo">哪间教室？</label>
+                         <select class="form-control selectpicker" data-live-search="true" name="classroomNo" id="classroomNo" required="required"></select>
+					 </div>
+                     <style onload="getClassrooms()"></style>
+			   </div>
+			   <div class="modal-footer">
+					<div class="form-group">
+						 <button type="button" class="btn btn-default" data-dismiss="modal"><span class="" aria-hidden="true"></span>关闭</button>
+				 	 	 <button type="submit" id="btn_submit_agreeStartApplication" class="btn btn-primary" data-dismiss="modal" onclick="agreeStartApplication_submit()"><span class="" aria-hidden="true"></span>提交</button>
+					 </div>
+			   </div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script>
+  var $table = $('#table')
+  var $add = $('#add')
+  var agree_row = {}
+
+  function operateFormatter(value,row,index){
+    return [
+      '<button id="agree" class="btn btn-primary" type="submit" data-toggle = "modal" data-target="#Modal_agreeStartApplication">',
+	  '同意',
+	  '</button>',
+	  '<button id="disagree" class="btn btn-danger" type="submit">',
+	  '不同意',
+	  '</button>'
+    ].join('')
+  }
+  function agreeStartApplication_submit(){
+        agree_row["courseDay"]=document.getElementById("courseDay").value
+		agree_row["courseBeginNo"]=document.getElementById("courseBeginNo").value
+		agree_row["courseNums"]=document.getElementById("courseNums").value
+		agree_row["classroomNo"]=document.getElementById("classroomNo").value
+		$.ajax({
+			url: '/edit/HandleStartApplication',
+			type: 'post',
+			dataType:'json',
+			data:JSON.stringify(agree_row),
+            success:function(res){
+            	$('#table').bootstrapTable('refresh');
+        		alert("成功");
+            }
+		})
+  }
+
+  window.operateEvents = {
+    'click #agree': function(e,value,row,index){
+        agree_row["choice"] = "agree"
+        agree_row["courseName"] = row["courseName"]
+        agree_row["teacherID"] = row["teacherID"]
+    },
+    'click #disagree': function(e,value,row,index){
+        row["choice"] = "disagree"
+        $.ajax({
+            url: '/edit/HandleStartApplication',
+            type: 'post',
+            dataType:'json',
+            data:JSON.stringify(row),
+            success:function(res){
+            	$('#table').bootstrapTable('refresh');
+        		alert("成功");
+            }
+        })
+
+    },
+  }
+
+  function initTable(){
+  	$table.bootstrapTable({
+    	method: 'post',
+    	url: '/data/StartApplication'
+    })
+  }
+  laydate.render({
+	  elem: '#addBirthday'
+	});
+  $(function() {
+    initTable();
+  })
+</script>
+
+</body>
+</html>

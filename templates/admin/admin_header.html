@@ -1,0 +1,48 @@
+
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+		<div class="container">
+			<a href="#" class="navbar-brand">教务管理系统</a>
+
+			<button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#main-nav">
+				<span class="menu-icon-bar"></span>
+				<span class="menu-icon-bar"></span>
+				<span class="menu-icon-bar"></span>
+			</button>
+			<div class="dropdown nav-person">
+				<a href="#" class="nav-item nav-link" data-toggle="dropdown">你好，{{posts.AdminName}}（{{posts.AdminNo}}）</a>
+				<div class="dropdown-menu">
+					<a href="{{ url_for('log.logout')}}" class="dropdown-item">登出</a>
+					<a href="{{ url_for('log.logout')}}" class="dropdown-item" data-toggle = "modal" data-target="#Modal_editPassword">修改密码</a>
+				</div>
+			</div>
+
+			<div id="main-nav" class="collapse navbar-collapse">
+				<ul class="navbar-nav ml-auto">
+					<li><a href="{{ url_for('admin.admin_index')}}" class="nav-item nav-link active">首页</a></li>
+					<li class="dropdown">
+						<a href="#" class="nav-item nav-link " data-toggle="dropdown">人员管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('admin.admin_stuff_addStudent')}}" class="dropdown-item">录入学生</a>
+							<a href="{{url_for('admin.admin_stuff_addTeacher')}}" class="dropdown-item">录入教师</a>
+							<a href="{{url_for('admin.admin_stuff_addAdmin')}}" class="dropdown-item">录入管理员</a>
+						</div>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="nav-item nav-link" data-toggle="dropdown">课程管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('admin.admin_course_teachApplication')}}" class="dropdown-item">处理任课申请</a>
+							<a href="{{url_for('admin.admin_course_startApplication')}}" class="dropdown-item">处理开课申请</a>
+							<a href="{{url_for('admin.admin_course_viewCourse')}}" class="dropdown-item">查看全校课程</a>
+							<a href="{{url_for('admin.admin_course_viewSpecialityCurriculum')}}" class="dropdown-item">查看专业课表</a>
+						</div>
+					</li>
+                    <li class="dropdown">
+						<a href="#" class="nav-item nav-link" data-toggle="dropdown">考试管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('admin.admin_exam_editExam')}}" class="dropdown-item">设置考试安排</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>

@@ -1,0 +1,170 @@
+<html lang="en">
+<head class="header-area overlay">
+    <meta charset="utf-8">
+    <title>teacher_course_classStudent</title>
+    <link rel="stylesheet" href="/static/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/admin.css">
+    <link rel="stylesheet" href="/static/assets/css/app.css">
+	<link rel="stylesheet" href="/static/assets/css/bootstrap-select.css">
+	<link rel="stylesheet" href="/static/assets/css/bootstrap-table.min.css">
+	<link rel="stylesheet" href="/static/assets/css/font-awesome.min.css">
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+	<link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="/static/assets/js/jquery.min.js"></script>
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+	<script src="/static/assets/js/popper.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+	<script src="/static/assets/js/bootstrap.min.js"></script>
+	<script src="/static/assets/js/bootstrap-table.js"></script>
+	<script src="/static/assets/js/tableExport.js"></script>
+	<script src="/static/assets/js/laydate/laydate.js"></script>
+	<script src="/static/assets/js/bootstrap-select.js"></script>
+	<script src="/static/assets/js/bootstrap-table-export.js"></script>
+	<script src="/static/assets/js/teacher.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+		<div class="container">
+			<a href="#" class="navbar-brand">教务管理系统</a>
+
+			<button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#main-nav">
+				<span class="menu-icon-bar"></span>
+				<span class="menu-icon-bar"></span>
+				<span class="menu-icon-bar"></span>
+			</button>
+			<div class="dropdown nav-person">
+				<a href="#" class="nav-item nav-link" data-toggle="dropdown">你好，{{posts.TeacherName}}（{{posts.TeacherNo}}）</a>
+				<div class="dropdown-menu">
+					<a href="{{ url_for('log.logout')}}" class="dropdown-item">登出</a>
+					<a href="{{ url_for('log.logout')}}" class="dropdown-item" data-toggle = "modal" data-target="#Modal_editPassword">修改密码</a>
+				</div>
+			</div>
+
+			<div id="main-nav" class="collapse navbar-collapse">
+				<ul class="navbar-nav ml-auto">
+					<li><a href="{{ url_for('teacher.teacher_index')}}" class="nav-item nav-link">首页</a></li>
+					<li class="dropdown">
+						<a href="#" class="nav-item nav-link active" data-toggle="dropdown">课程管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('teacher.teacher_course_teachApplication')}}" class="dropdown-item">任课申请</a>
+							<a href="{{url_for('teacher.teacher_course_startApplication')}}" class="dropdown-item">开课申请</a>
+							<a href="{{url_for('teacher.teacher_course_teacherCurriculum')}}" class="dropdown-item">查看任课课表</a>
+                            <a href="{{url_for('teacher.teacher_course_classStudent')}}" class="dropdown-item">查看学生名单</a>
+						</div>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="nav-item nav-link" data-toggle="dropdown">考试管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('teacher.teacher_exam_monitorInfo')}}" class="dropdown-item">查看监考安排</a>
+                            <a href="{{url_for('teacher.teacher_exam_classExam')}}" class="dropdown-item">查看教学班考试安排</a>
+						</div>
+					</li>
+                    <li class="dropdown">
+						<a href="#" class="nav-item nav-link" data-toggle="dropdown">成绩管理</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('teacher.teacher_score_addScore')}}" class="dropdown-item">录入成绩</a>
+						</div>
+					</li>
+                    <li class="dropdown">
+						<a href="#" class="nav-item nav-link" data-toggle="dropdown">教学评价</a>
+						<div class="dropdown-menu">
+							<a href="{{url_for('teacher.teacher_evaluate_addEvaluation')}}" class="dropdown-item">教学评价</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-12">
+			<div id="toolbar">
+                <label for="addCourseNo">选择课程</label>
+                <select class="form-control " data-live-search="true" name="addSpeciality" id="addCourseNo" required="required" >
+				</select>
+                <style onload="getTeachCourses()"></style>
+			</div>
+			<table id="table"
+				class="table-fix">
+		  <thead>
+			<tr>
+			  <th data-field="No" data-sortable="true">学号</th>
+			  <th data-field="name" data-sortable="true">姓名</th>
+			  <th data-field="gender" data-sortable="true">性别</th>
+			  <th data-field="birthday">出生日期</th>
+			  <th data-field="collegeName">学院</th>
+			  <th data-field="specialityName">专业</th>
+			</tr>
+		  </thead>
+		</table>
+		</div>
+
+	</div>
+	<div class="modal fade" id="Modal_editPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			   <div class="modal-header">
+				 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			   </div>
+			   <div class="modal-body">
+					 <div class="form-group">
+					   <label for="oldPassword">旧密码</label>
+					   <input type="password" name="oldPassword" id="oldPassword" class="form-control" required="required" autocomplete="new-password">
+					 </div>
+					 <div class="form-group">
+					   <label for="newPassword">新密码</label>
+					   <input type="password" name="newPassword" id="newPassword" class="form-control" required="required" placeholder="至少6位">
+					 </div>
+			   </div>
+			   <div class="modal-footer">
+					<div class="form-group">
+						 <button type="button" class="btn btn-default" data-dismiss="modal"><span class="" aria-hidden="true"></span>关闭</button>
+				 	 	 <button type="submit" id="btn_submit_editPassword" class="btn btn-primary" data-dismiss="modal" onclick="editPassword_submit()"><span class="" aria-hidden="true"></span>提交</button>
+					 </div>
+			   </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+  var $table = $('#table')
+  var $add = $('#add')
+
+  var addCourseNoElement = document.getElementById("addCourseNo")
+  addCourseNoElement.onchange=function(){
+  	$('#table').bootstrapTable('refresh');
+  	}
+  //课程一改变就重新加载名单
+
+  function queryParams(params){
+    var temp={
+      'courseNo':document.getElementById("addCourseNo").value
+    }
+    return temp;
+  }
+  function initTable(){
+  	$table.bootstrapTable({
+    	method: 'post',
+    	url: '/data/StudentInfo',
+    	dataType:"json",
+    	contentType : "application/x-www-form-urlencoded",
+    	height:"680",
+		pagination:"true",
+		toolbar:"#toolbar",
+  		search:"true",
+		searchOnEnterKey:"true",
+		showExport:"true",
+		queryParams:queryParams,
+		queryParamsType:"limit",
+		showExport:"true",
+    })
+  }
+  $(function() {
+    initTable();
+  })
+</script>
+
+</body>
+</html>
